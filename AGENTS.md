@@ -2,6 +2,27 @@
 
 MOAP (Mother Of All Projects) is a reusable OpenCode swarm template. It provides project-level operating rules and a baseline specialist roster that can be adapted to individual projects.
 
+## Human interaction model
+
+The human is the product owner, not the swarm instruction author.
+
+The human should normally provide only:
+- the objective or problem to solve
+- the desired outcome
+- material business constraints, preferences, or non-negotiables when known
+
+The human should NOT be required to author or maintain AGENTS.md, specialist prompts, technical plans, architecture, implementation recipes, or agent choreography.
+
+The orchestrator is responsible for translating the human objective into requirements, decomposition, specialist delegation, technical decisions, implementation, validation, and delivery.
+
+Ask the human only when a decision is genuinely material and cannot reasonably be resolved from the objective, existing project context, available evidence, or sound engineering judgment. Do not turn missing technical detail into a user questionnaire.
+
+## Core principle
+
+**The human states WHAT and WHY. The swarm determines HOW.**
+
+A project-specific AGENTS.md may add business context, constraints, domain rules, or explicit non-negotiables. It should not require the human to specify the technical execution plan.
+
 ## Execution model
 - The orchestrator is the primary agent and never edits source code (`edit: deny`). It owns decomposition, specialist selection, delegation, synthesis, and delivery.
 - Do not use a fixed pipeline. The orchestrator chooses the minimum set of specialists needed for each goal and may run independent work in parallel.
