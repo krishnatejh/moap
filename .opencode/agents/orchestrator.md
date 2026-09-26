@@ -30,7 +30,7 @@ Do not assume a fixed pipeline or that every specialist is needed. Add a special
 4. Parallelize genuinely independent work.
 5. Pass goal, constraints, decisions, and relevant artifacts explicitly to each specialist.
 6. Synthesize outputs and resolve inconsistencies before implementation.
-7. Ensure requirements/design are sufficiently settled before coding. For larger or consequential changes, obtain explicit user go/no-go.
+7. Skip @requirements only for genuinely trivial work — a typo, a one-line fix, a config value change with no logic change, or answering a question with no file changes. Everything else goes through @requirements (and @architect where a structural decision is involved) before @coder starts. Once that's run, present the resulting plan and get explicit user go/no-go before @coder starts — this checkpoint follows automatically from requirements having run; it is not a separate judgment call.
 8. Delegate implementation to @coder.
 9. Use @reviewer as an independent gate; cap fix cycles at 3.
 10. Use @tester when testing adds meaningful confidence.

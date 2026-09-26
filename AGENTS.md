@@ -26,7 +26,7 @@ A project-specific AGENTS.md may add business context, constraints, domain rules
 ## Execution model
 - The orchestrator is the primary agent and never edits source code (`edit: deny`). It owns decomposition, specialist selection, delegation, synthesis, and delivery.
 - Do not use a fixed pipeline. The orchestrator chooses the minimum set of specialists needed for each goal and may run independent work in parallel.
-- Requirements/design should be sufficiently settled before implementation. For larger or consequential implementation work, the orchestrator presents the resulting plan and gets explicit user go/no-go before @coder starts.
+- Skip @requirements only for genuinely trivial work — a typo, a one-line fix, a config value change with no logic change, or answering a question with no file changes. Everything else goes through @requirements (and @architect where a structural decision is involved) before @coder starts. Once that's run, the orchestrator presents the resulting plan and gets explicit user go/no-go before @coder starts — this checkpoint follows automatically from requirements having run; it is not a separate judgment call.
 - Review is an independent quality gate. Cap coder/reviewer fix cycles at 3; stop and report unresolved issues after that.
 - Carry the goal, constraints, relevant artifacts, and decisions explicitly in every delegation.
 - Do not add agents, technologies, abstractions, or workflow stages merely because they are available.
@@ -35,7 +35,7 @@ A project-specific AGENTS.md may add business context, constraints, domain rules
 See `docs/CAPABILITIES.md`. Treat capabilities as options, not mandatory dependencies.
 
 ## Permissions
-- `opencode.json` is the source of truth for permissions and model configuration.
+- `.opencode/agents/*.md` frontmatter is the source of truth for permissions and model configuration.
 - `@requirements` / `@architect` / `@ux`: `docs/**` only.
 - `@ui`: `docs/**` + `src/**` on ask.
 - `@coder`: full edit + bash.
