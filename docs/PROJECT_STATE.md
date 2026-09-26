@@ -1,6 +1,8 @@
 # Project State
 
-> This is a living document maintained by the orchestrator. It is read at the start of every session and updated at the end. Do not delete or reorganize this file — append and update in place.
+> This is a living document maintained by the orchestrator. It is read at the start of every session and updated at every checkpoint — after plan approval, after each accepted roadmap piece, and on every escalation. The agent is never told when a session ends, so there is no "end of session" step. Do not delete or reorganize this file — append and update in place.
+>
+> Project-level facts live in `docs/PROJECT_BRIEF.md` (vision, non-negotiables) and `docs/ROADMAP.md` (ordered pieces and status). This file records what happened and what is pending.
 
 ## Current Objective
 

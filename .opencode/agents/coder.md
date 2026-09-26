@@ -3,6 +3,11 @@ description: Implements code against an approved spec and design. Full file and 
 mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
 permission:
+  read:
+    "*": allow
+    "*.env": deny
+    "*.env.*": deny
+    "*.env.example": allow
   edit: allow
   bash: allow
 ---

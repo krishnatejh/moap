@@ -3,9 +3,15 @@ description: Makes structural and technical design decisions against an approved
 mode: subagent
 model: openrouter/z-ai/glm-5.3
 permission:
+  read:
+    "*": allow
+    "*.env": deny
+    "*.env.*": deny
+    "*.env.example": allow
+  # Catch-all first: the last matching rule wins, so specific allows must follow it.
   edit:
-    "docs/**": allow
     "*": deny
+    "docs/**": allow
   bash:
     "*": deny
     "git log*": allow

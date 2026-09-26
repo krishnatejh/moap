@@ -3,9 +3,15 @@ description: Turns a goal or feature request into a concise spec with scope and 
 mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
 permission:
+  read:
+    "*": allow
+    "*.env": deny
+    "*.env.*": deny
+    "*.env.example": allow
+  # Catch-all first: the last matching rule wins, so specific allows must follow it.
   edit:
-    "docs/**": allow
     "*": deny
+    "docs/**": allow
   bash: deny
 ---
 

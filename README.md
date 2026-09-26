@@ -22,28 +22,37 @@ The template ships with placeholder models. Replace them per-project based on yo
 Copy the MOAP directory into your new project. You need:
 ```
 .opencode/agents/       ← all 8 agent files
+opencode.json           ← sets the swarm as the default agent
 AGENTS.md               ← operating rules
+.env.example            ← the keys this project needs, without the secrets
+.gitignore              ← keeps .env and build output out of git
 docs/CAPABILITIES.md    ← capability inventory
-docs/PROJECT_STATE.md   ← state tracking (reset it — see step 5)
+docs/PROJECT_BRIEF.md   ← vision and non-negotiables
+docs/ROADMAP.md         ← ordered pieces and status
+docs/PROJECT_STATE.md   ← state tracking
 ```
 
 ### 2. Set models
 Open each file in `.opencode/agents/` and set the `model:` field in the frontmatter. Use the tier table above to decide which roles get your strongest model vs. a lighter one.
 
-### 3. Add project context to AGENTS.md
-Append a section to `AGENTS.md` with anything the swarm needs to know about *this* project specifically:
-- What the product is and who it's for
-- Hard constraints (budget, platform, timeline, must-use technologies)
-- Non-negotiables (e.g., "must work offline", "no paid APIs")
-- Domain rules the swarm wouldn't know (e.g., regulatory requirements, business logic)
+### 3. Note your constraints in the first session (do not edit template files)
 
-Keep it to facts and constraints. Don't write implementation plans — that's the swarm's job.
+Do not edit `AGENTS.md` or any other template file. Everything the swarm needs before it plans goes in your first message:
+- Hard constraints it cannot infer (budget cap, a platform that must be supported, a deadline)
+- Non-negotiables (e.g. "must work offline", "no paid APIs")
+- Domain rules it wouldn't know (e.g. regulatory requirements, business logic)
+
+The orchestrator records them in `docs/PROJECT_BRIEF.md` and asks you to approve. Same for the vision, the users, and what success looks like — you describe it, the orchestrator drafts it. Keeping template files untouched means you can pull future MOAP improvements into this project without merging your content by hand.
 
 ### 4. Customize CAPABILITIES.md (optional)
 If this project has capabilities beyond the defaults (specific APIs, databases, services), add them. Remove any that definitely don't apply to reduce noise.
 
-### 5. Reset PROJECT_STATE.md
-Clear all the placeholder content so the orchestrator starts with a blank state. Leave the section headings intact.
+### 5. Copying from a project that has already been used
+Skip this if you copied the clean template — the three context files already ship blank, and only `PROJECT_BRIEF.md` and `ROADMAP.md` carry the `MOAP:UNFILLED` marker that tells the orchestrator to run kickoff.
+
+If you copied from a project that has already been worked on, clear `PROJECT_BRIEF.md`, `ROADMAP.md`, and `PROJECT_STATE.md` first, and make sure the `MOAP:UNFILLED` marker is present in the brief and the roadmap. Otherwise the orchestrator will read the old project's state as if it were this one. Leave the section headings intact — the orchestrator fills them in and needs the structure.
+
+Also delete `docs/archive/` and any leftover review or working notes from the old project so they don't get copied forward.
 
 ### 6. Replace this README
 Replace this file with your project's own README. This bootstrap guide is a MOAP reference — it doesn't belong in the new project.
@@ -53,4 +62,12 @@ Tell the orchestrator what you want to build and what outcome you expect. Exampl
 
 > *"I want to build a personal finance tracker that pulls transactions from my bank API, categorizes them, and shows a monthly dashboard. It should be a web app I can self-host."*
 
-The swarm handles the rest — requirements, architecture, implementation, review, testing.
+The orchestrator reads the three context files, writes `PROJECT_BRIEF.md` and `ROADMAP.md` from your description, and asks you to approve them. It then handles the rest — requirements, architecture, implementation, review, testing. You never author the plan.
+
+## Two agents, two very different things
+| Agent | What it is |
+|---|---|
+| `orchestrator` | The swarm. Default on session start (`opencode.json` → `default_agent`). Routes everything through requirements → coder → reviewer. |
+| `build` | An OpenCode built-in, not part of MOAP. Full edit access, no requirements, no review, no approval checkpoint. |
+
+If you ever switch to `build`, you have opted out of every gate MOAP provides. `general` is a built-in subagent with the same problem — the orchestrator is explicitly denied permission to hand work to it.

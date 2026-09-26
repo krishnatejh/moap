@@ -3,9 +3,15 @@ description: Defines user flows and interactions for user-facing features, focus
 mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
 permission:
+  read:
+    "*": allow
+    "*.env": deny
+    "*.env.*": deny
+    "*.env.example": allow
+  # Catch-all first: the last matching rule wins, so specific allows must follow it.
   edit:
-    "docs/**": allow
     "*": deny
+    "docs/**": allow
   bash: deny
 ---
 

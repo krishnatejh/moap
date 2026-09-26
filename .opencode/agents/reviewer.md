@@ -3,11 +3,23 @@ description: Independent read-only quality gate that reviews implementation agai
 mode: subagent
 model: openrouter/z-ai/glm-5.3
 permission:
+  read:
+    "*": allow
+    "*.env": deny
+    "*.env.*": deny
+    "*.env.example": allow
   edit: deny
   bash:
-    "*": ask
+    # Read-only inspection only. The reviewer never runs the code, never writes,
+    # and never prompts the human to approve a command they cannot evaluate.
+    "*": deny
+    "git status*": allow
     "git diff*": allow
     "git log*": allow
+    "git show*": allow
+    "git ls-files*": allow
+    "git rev-parse*": allow
+    "git show-ref*": allow
     "grep *": allow
 ---
 

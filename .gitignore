@@ -1,0 +1,41 @@
+# Secrets — never commit these. Keep the keys in .env, commit .env.example.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependencies
+node_modules/
+vendor/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Build output
+dist/
+build/
+out/
+.next/
+.turbo/
+*.tsbuildinfo
+
+# Test and coverage output
+coverage/
+.nyc_output/
+.pytest_cache/
+
+# Local tooling and editor state
+.DS_Store
+Thumbs.db
+*.bak
+*.log
+.idea/
+.vscode/*
+!.vscode/settings.json
+
+# Platform and provider local state
+.vercel/
+.wrangler/
+*.local
