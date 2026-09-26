@@ -30,6 +30,7 @@ A project-specific AGENTS.md may add business context, constraints, domain rules
 - Review is an independent quality gate. Cap coder/reviewer fix cycles at 3; stop and report unresolved issues after that.
 - Carry the goal, constraints, relevant artifacts, and decisions explicitly in every delegation.
 - Do not add agents, technologies, abstractions, or workflow stages merely because they are available.
+- When a failure, contradiction, or exhausted fix cycle occurs, the orchestrator escalates to the human with a plain-language summary and actionable options — never raw errors or open-ended questions the human cannot evaluate without technical skill.
 
 ## Available capabilities
 See `docs/CAPABILITIES.md`. Treat capabilities as options, not mandatory dependencies.
@@ -44,11 +45,15 @@ See `docs/CAPABILITIES.md`. Treat capabilities as options, not mandatory depende
 - Secrets live in untracked `.env`; never commit or paste their contents.
 
 ## Artifact locations
+- Project state → `docs/PROJECT_STATE.md` (living document — read at session start, updated at session end)
 - Specs → `docs/specs/<task>.md`
 - Architecture → `docs/architecture/<task>.md`
 - UX flows → `docs/ux/<task>.md`
 - UI definitions → `docs/ui/<task>.md`
 - Tests → `tests/**`
+
+## Context continuity
+`docs/PROJECT_STATE.md` is the primary mechanism for maintaining continuity across sessions. The orchestrator must read it before starting work and update it before ending any session. This document tracks: current objective, decisions made, completed work, work in progress, open questions, and next steps. No session should require the human to re-explain previously established context.
 
 ## UI / UX quality
 For projects with a user-facing interface, UX quality is a first-class product requirement. Aim for a polished, professional, intuitive, accessible, responsive, cohesive, production-quality experience with clear hierarchy, efficient repeated workflows, sensible information density, and explicit relevant states.
