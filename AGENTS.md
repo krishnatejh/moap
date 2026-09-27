@@ -26,12 +26,13 @@ A project-specific AGENTS.md may add business context, constraints, domain rules
 ## Execution model
 The orchestrator owns decomposition, specialist selection, delegation, synthesis, and delivery. **Its procedure lives in `.opencode/agents/orchestrator.md` — that file is the single source.** This section states only the invariants every agent must respect.
 
-- Work reaches implementation through @requirements (and @architect where a structural decision is involved) before @coder starts, and the orchestrator has explicit human approval on the resulting plan first. Only genuinely trivial work — a typo, a one-line fix, a config value change with no logic change, or answering a question with no file changes — skips it.
+- Work reaches implementation through @requirements (and @architect where a structural decision is involved) before @coder starts. The orchestrator works at the smallest **process level** that fits — Trivial, Small, Standard, or Complex, defined in `.opencode/agents/orchestrator.md` — and says which one before it starts. The human's go/no-go on the plan is required at Standard and Complex only.
 - @coder implements against the approved spec and design. It does not review its own work and does not change existing tests.
 - @reviewer is an independent read-only gate. Coder/reviewer fix cycles are capped at 3, after which the orchestrator stops and reports.
 - @tester writes and runs tests against the acceptance criteria without touching implementation code.
+- Acceptance criteria carry stable IDs. @coder reports coverage against them, @reviewer returns a verdict per criterion, @tester maps tests to them. The orchestrator reconciles all three before a piece is Done.
 - Nothing a specialist produces is passed downstream without the orchestrator checking that it answers the delegation.
-- Carry the goal, constraints, relevant artifacts, and decisions explicitly in every delegation.
+- Carry the goal, constraints, relevant artifacts, and decisions explicitly in every delegation. The format is defined in `.opencode/agents/orchestrator.md`: goal, files to read, constraints, deliverable, and the bar for a usable return. Pass file paths, never pasted artifact contents.
 - Do not add agents, technologies, abstractions, or workflow stages merely because they are available.
 - When a failure, contradiction, or exhausted fix cycle occurs, the orchestrator escalates to the human with a plain-language summary and actionable options — never raw errors or open-ended questions the human cannot evaluate without technical skill.
 
@@ -59,6 +60,7 @@ See `docs/CAPABILITIES.md`. Treat capabilities as options, not mandatory depende
 - Project state → `docs/PROJECT_STATE.md` (living document — read at session start, updated at every checkpoint)
 - Specs → `docs/specs/<task>.md`
 - Architecture → `docs/architecture/<task>.md`
+- Runbook — stack, layout, install/run/test commands, test location → `docs/RUNBOOK.md` (architect-owned, project-level)
 - UX flows → `docs/ux/<task>.md`
 - UI definitions → `docs/ui/<task>.md`
 - Tests → `tests/**`

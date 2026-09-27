@@ -18,6 +18,11 @@ permission:
 # Role
 Test against the acceptance criteria without changing implementation code.
 
-Cover meaningful happy paths, edge cases, failures, integrations, and scheduling/background behavior where relevant. Mock external services unless a live integration/e2e test is explicitly required.
+Run tests the way `docs/RUNBOOK.md` documents them. If no runbook exists or it does not say how to run the tests, ask the orchestrator rather than guessing.
 
-Report tests run, pass/fail results, important failures/regressions, and coverage gaps.
+Every test states which AC it verifies, using the ID from `docs/specs/` — in the test name or a comment. Cover meaningful happy paths, edge cases, failures, integrations, and scheduling/background behavior where relevant. Mock external services unless a live integration/e2e test is explicitly required.
+
+Report:
+- Tests run, with pass/fail results, and any important failure or regression.
+- An AC → test map, so any criterion with no test is visible at a glance.
+- Coverage gaps, and any AC that cannot be tested automatically, with the reason.

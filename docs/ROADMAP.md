@@ -10,15 +10,18 @@
 
 ## How to read this
 
-Each piece must produce something working and verifiable on its own. A piece counts as **Done** only when every item in the orchestrator's "Definition of done" is satisfied: acceptance criteria passed review and tests, a single documented run command, "how to try it" steps for the human, the context files updated, and a local git commit.
+Each piece must produce something working and verifiable on its own. A piece counts as **Done** only when every item in the orchestrator's "Definition of done" is satisfied: every `Must` acceptance criterion passed review and its tests, a single documented run command, "how to try it" steps for the human, the context files updated, and a local git commit.
 
 Statuses: `Todo` → `In progress` → `In review` → `Done`. If work cannot proceed, use `Blocked` and record what it is waiting for in `docs/PROJECT_STATE.md`. One piece is `In progress` at a time unless the work is genuinely independent and parallel.
+
+Each piece states its process level — `Trivial`, `Small`, `Standard`, or `Complex` — which decides how much ceremony it gets and whether you are asked to approve the plan before coding starts. Only `Trivial` work skips the spec, review, and tests; anything more than a one-line fix goes through @requirements first.
 
 ---
 
 ## Piece 1 — _name_
 
 - **Status:** Todo
+- **Level:** Trivial | Small | Standard | Complex
 - **Outcome:** _What the human can do once this is done, in one sentence._
 - **Spec:** `docs/specs/<task>.md` _(filled in by @requirements when work starts)_
 - **Depends on:** _none_
@@ -26,6 +29,7 @@ Statuses: `Todo` → `In progress` → `In review` → `Done`. If work cannot pr
 ## Piece 2 — _name_
 
 - **Status:** Todo
+- **Level:** Trivial | Small | Standard | Complex
 - **Outcome:** _..._
 - **Spec:** `docs/specs/<task>.md`
 - **Depends on:** Piece 1
@@ -36,6 +40,7 @@ Piece template — copy per piece:
 ## Piece N — short descriptive name
 
 - **Status:** Todo | In progress | In review | Blocked | Done
+- **Level:** Trivial | Small | Standard | Complex
 - **Outcome:** What the human can do once this is done.
 - **Spec:** docs/specs/N-<slug>.md
 - **Architecture:** docs/architecture/N-<slug>.md

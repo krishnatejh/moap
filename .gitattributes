@@ -1,0 +1,5 @@
+# Normalize line endings in the repository; check out per platform.
+# Without this, the same prompt file can differ between a Windows and a
+# macOS clone, which produces noisy diffs in files the agents read on every
+# single session.
+* text=auto

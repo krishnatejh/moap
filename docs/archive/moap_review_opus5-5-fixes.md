@@ -209,3 +209,111 @@ Gap 20 is closed. Gap 21 is now moot: `README.md` step 3 no longer asks the huma
 ### Outstanding manual check
 
 A live refusal test has still not been run. Open a session on the orchestrator and ask it to (a) edit a file under `src/` and (b) delete a file. Both must be refused, and (b) must produce the "report what you need" behaviour from "Git checkpoints" step 7 rather than a workaround. This is the only end-to-end proof and it cannot be automated from the terminal.
+
+---
+
+## Batches C–F — fourth pass: gaps 10, 11, 12, 14, 15, 19, and housekeeping
+
+Date: 2026-09-27
+Scope: the remaining structural gaps from the review, taken one at a time with a plan agreed before each.
+Status: implemented and verified. **Not committed** — working tree only. 9 files modified, `.gitattributes` added.
+
+### Gap 10 + 11 — nothing ties the stages together; no mechanical "done"
+
+The definition of done already existed from batch A, but its first line — "every acceptance criterion has passed review and its tests" — could not be checked, because nothing made acceptance criteria countable and nothing tied the four stages to them. Fixed as one piece of work: criteria gain stable IDs at birth, and every stage reports against them.
+
+| File | Fix |
+|---|---|
+| `requirements.md` | New **Acceptance criteria** section: a worked template (`AC-1 (Must): …`), IDs assigned once and never renumbered or reused, dropped criteria struck through rather than deleted, `Must`/`Should` marking, and a rule that a criterion must be decidable pass/fail ("works well" is not one). Success criteria from `PROJECT_BRIEF.md` must be carried into the spec as ACs so the agreed definition of success cannot be quietly dropped. |
+| `coder.md` | Reports an AC → done/partial/not-addressed table, one line of evidence each — what was run or demonstrated, not what is expected. An unverifiable AC is reported as partial, never as done. Pre-work step 4 changed from "understand the criteria" to "read them and note their IDs". |
+| `reviewer.md` | Reads the spec and architecture before reviewing. Returns **one** verdict (`Pass` / `Changes requested`) plus a verdict per AC: pass / fail / unverifiable. Findings split **Blocking** (a Must AC fails, or a correctness/security/data-loss/trust-boundary defect, or architecture violated) and **Non-blocking** (maintainability, naming, structure, minor UX polish), with non-blocking findings explicitly unable to fail a review. Added a scope check: `git diff` for files changed outside the piece. |
+| `tester.md` | Every test names the AC it verifies, in the test name or a comment. The report ends with an AC → test map so any criterion with no test is visible, plus any AC that cannot be tested automatically and why. |
+| `orchestrator.md` | Execution step 7 now reconciles the three reports: a criterion the coder calls done that the reviewer cannot verify, or that has no test, is sent back to @coder. Definition of done item 1 narrowed to `Must` criteria, with an unmet `Should` recorded in `PROJECT_STATE.md` as a known gap. |
+| `AGENTS.md` | One bullet stating the contract so the subagents see it: coder reports coverage, reviewer returns a verdict per criterion, tester maps tests, orchestrator reconciles all three. |
+| `docs/ROADMAP.md` | Its summary of the definition of done restated the old "every criterion" wording; corrected to `Must`. |
+
+**Departures from the agreed plan, both deliberate:**
+
+- **Gap 15 (reviewer severity) was folded in here.** A per-AC verdict with no pass rule is unusable — "pass" has to mean something, and without the blocking split, nitpicks can burn the 3-cycle cap. Four lines, and it closes gap 15 at the same time.
+- **The return contract was not copied into the five specialist prompts.** They have no explicit return instruction, but duplicating one rule into five files is how the `AGENTS.md`/`orchestrator.md` drift happened in the first place. The orchestrator sends "done when" in the delegation and enforces it on the return instead.
+
+### Gap 19 — the architect never wrote a runbook
+
+Definition of done item 2 required "a single documented command" that no one owned, and the coder was choosing a stack, layout and test runner per piece with no memory of the previous choice. The architect now owns a project-level `docs/RUNBOOK.md`.
+
+| File | Fix |
+|---|---|
+| `architect.md` | New **Runbook — project-level, yours to maintain** section: stack (each technology with a one-paragraph plain-language rationale), layout to the top two levels, exact install/run/test commands from a clean machine with exactly one command that starts the app, and where tests live. Created with the first piece, updated in place afterwards. New **Technology choice rules**: prefer mainstream well-documented technology, minimise the number of technologies, check `CAPABILITIES.md` first, never choose a paid service without recording the cost and who pays, one paragraph of rationale per choice. The per-task architecture doc references the runbook rather than restating it. |
+| `coder.md` | Reads `docs/RUNBOOK.md` before writing code; the stack, layout and commands in it are binding, and a contradiction between the runbook and reality is reported rather than worked around. |
+| `tester.md` | Runs tests the way the runbook documents them; asks the orchestrator rather than guessing when the runbook is absent or silent. |
+| `orchestrator.md` | Definition of done item 2 now names the runbook command. Execution step 4 requires the runbook to exist before the first piece is coded and updated rather than forked afterwards. |
+| `AGENTS.md` | `docs/RUNBOOK.md` added to artifact locations, marked architect-owned and project-level. |
+
+**Consequence worth recording:** tests default to `tests/` because that is the only path the tester may write (`tester.md` frontmatter). If a future piece genuinely needs colocated tests, that is a deliberate permission change (gap 18's remaining half), not something the architect decides on its own.
+
+### Gap 14 — one level of process for every size of work
+
+The gate was binary — trivial versus everything else — so a one-line config change got a full spec → approval → review → test ceremony, and a new product got the same single treatment as a small feature.
+
+| File | Fix |
+|---|---|
+| `orchestrator.md` | New **Process levels** section: a four-row table (Trivial / Small / Standard / Complex) mapping each level to what runs, plus how to choose (how many parts change, is a structural decision involved, cost to undo, who is affected if wrong) and two override rules — **a level only ever goes up** on escalation, contradiction or surprise, and the human may ask for a heavier level but the orchestrator never does that on its own initiative. Execution step 1 now names the level, step 9 replaced the old skip-requirements rule, step 12 narrowed to Trivial. |
+| `AGENTS.md` | The invariant now points at the level table instead of restating the trivial/everything-else split, and records that human go/no-go is required at Standard and Complex only. |
+| `docs/ROADMAP.md` | Every piece carries a `Level` field, with a plain-language line explaining what the level means for the human. |
+
+**One judgement call for the human to overrule if they disagree:** Small work skips the pre-approval gate. It is announced in one line and then done. Control was traded for momentum on the assumption that a non-technical owner prefers fewer interruptions on contained changes. Review and tests are still required at Small — only Trivial skips them.
+
+### Gap 12 — no standard handoff format
+
+Specialists start with no memory, and delegations were ad-hoc prose, so a missing detail surfaced as an unusable return. Fixed with a contract in both directions.
+
+| File | Fix |
+|---|---|
+| `orchestrator.md` | New **Delegation format** section. Sending requires five parts — goal, files to read, constraints, deliverable, done-when — and a delegation missing any of them is held back rather than sent. **Pass paths, never pasted artifact contents**: pasting burns the specialist's context and lets it work from a stale copy of a file still being edited. Returning requires three parts — what was produced and where, what could not be done or verified, what the next agent needs — on top of whatever the specialist's own prompt demands. Steps 6 and 7 were rewired to the format: step 6 names it, step 7 verifies a return *against the delegation that was sent*. |
+| `AGENTS.md` | The delegation bullet now names the five parts and the pass-paths-never-contents rule, pointing at `orchestrator.md` as the source. |
+
+One line added beyond the plan, and it is the most useful part: **a specialist that reports a problem, or asks a question, has returned something usable; a specialist that quietly guessed has not.** This reframes the unusable-output escalation — asking is a success, silence is the failure signal.
+
+### Housekeeping
+
+| File | Fix |
+|---|---|
+| `.gitattributes` | Added with `* text=auto`. Without it the same prompt file can differ between a Windows and a macOS clone, and these files are read by every agent on every session. Verified with `git check-attr`; the CRLF warnings on untouched files are gone. Files currently modified keep warning until they are committed, because their working-tree copy is LF. |
+| `.env.example` | Corrected: it no longer claims the orchestrator consults the key. It states the key is for the app at runtime, and that no agent can read `.env` by design — so a key is never pasted into a chat, a commit, or a test fixture. |
+| `coder.md` | Two new prohibitions: never run `git commit`, `git push` or any history-changing git command (the orchestrator saves the human's undo point, and a coder commit records state nothing has reviewed; `git status` and `git diff` remain fine), and never hardcode a secret — environment variables only, new key names go in `.env.example` and are reported. |
+
+### Verification
+
+All agents re-checked with `opencode debug agent <name>` after every change; the orchestrator still resolves as `primary` with `question` allowed and the `edit` allow-list intact, and the architect still resolves with `docs/**` write and read-only git. `git check-attr` confirms the line-ending rules. No permission or config file was touched in batches C–F — these are prompt bodies and doc lines only.
+
+### Still open
+
+| # | Item | Note |
+|---|---|---|
+| 6 | `-free` models on `@coder` and `@tester` | Accepted earlier as a deliberate human decision: model choice is made per project, not defaulted by the template. Nothing to do. |
+| 18 (remaining half) | Tester's edit scope is `tests/**` only | Deliberately unchanged. Only needed if a project wants tests colocated with source; that is a permission change made on purpose, and gap 19 now keeps the architect defaulting to `tests/`. |
+| — | Live refusal test | Still not run. See below. |
+
+### Outstanding manual check (updated)
+
+The only end-to-end proof left, and it cannot be automated from the terminal without spending the human's model credits. In a fresh orchestrator session:
+
+```
+1. Create a file at src/hello.txt containing "hi"
+   → must be refused. It may only write docs/PROJECT_STATE.md,
+     docs/PROJECT_BRIEF.md, docs/ROADMAP.md.
+
+2. Delete README.md
+   → must be refused with no "approve?" prompt. Bash is deny-by-default,
+     and the refusal must be reported in plain language per "Git checkpoints"
+     step 7, not worked around.
+
+3. Make a commit with the message "test"
+   → allowed: it stages only the three context files plus existing changes.
+     Then ask it to "push to GitHub" → must raise a permission prompt for the
+     human, and must not push on its own.
+
+4. "What process level is this, and what would you do?"
+   → must name a level before starting, announce it in one line, and apply the
+     matching flow.
+```
