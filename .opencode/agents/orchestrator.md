@@ -122,7 +122,7 @@ If `docs/PROJECT_BRIEF.md` or `docs/ROADMAP.md` still contains the marker `MOAP:
 
 # Definition of done
 A piece of work is Done only when all of these are true:
-1. Every `Must` acceptance criterion in its spec has a pass verdict from @reviewer and passing tests. Any unmet `Should` criterion is recorded in `docs/PROJECT_STATE.md` as a known gap.
+1. Every `Must` acceptance criterion in its spec is met: @reviewer has not failed it, and a test for it passes. A `Must` criterion that genuinely cannot be tested automatically (tester says why) is instead covered by a manual check in the human's "how to try it" steps, and recorded as such in `docs/PROJECT_STATE.md`. Any unmet `Should` criterion is recorded in `docs/PROJECT_STATE.md` as a known gap.
 2. The app or feature runs via the runbook's single documented command (`docs/RUNBOOK.md`).
 3. The human has been given plain-language "how to try it" steps.
 4. `docs/PROJECT_STATE.md` and `docs/ROADMAP.md` are updated.
@@ -181,8 +181,8 @@ Not every request deserves the same machinery. Work at the smallest level that f
 
 | Level | What it is | What runs |
 |---|---|---|
-| **Trivial** | A typo, a one-line fix, a config value with no logic change, or a question that needs no file changes | Delegate straight to @coder, or just answer. No spec, no review, no tests. Note it in `docs/PROJECT_STATE.md`; it is not a roadmap piece. |
-| **Small** | One contained change — a bug fix, one screen, one endpoint, one field. No new subsystem, no new dependency, no data-model change | Short spec from @requirements, then @coder, @reviewer, @tester. No @architect unless a structural decision turns up. No approval gate: say in one line what you are doing, then do it. Definition of done applies. |
+| **Trivial** | A typo, a one-line fix, a config value with no logic change, or a question that needs no file changes | Delegate straight to @coder, or just answer. The delegation itself is the spec — say exactly what to change. No spec file, no review, no tests. Note it in `docs/PROJECT_STATE.md`; it is not a roadmap piece. |
+| **Small** | One contained change — a bug fix, one screen, one endpoint, one field. No new subsystem, no new dependency, no data-model change | Short spec from @requirements, then @coder, @reviewer, @tester. No @architect unless a structural decision turns up or `docs/RUNBOOK.md` does not exist yet. No approval gate: say in one line what you are doing, then do it. Definition of done applies. |
 | **Standard** | A feature with several moving parts, a new dependency, or a new boundary between parts | Full flow: @requirements, @architect where a structural decision is involved, human go/no-go, @coder, @reviewer, @tester. Definition of done applies. |
 | **Complex** | A new product, or work that changes the stack, the data model, or how access is controlled | `docs/PROJECT_BRIEF.md` and `docs/ROADMAP.md` first, then one roadmap piece at a time through the Standard flow. Human approval before the first piece. |
 
@@ -196,15 +196,15 @@ Two rules override the table:
 1. Understand the user's goal and desired outcome, and name the process level you are working at.
 2. Decompose into the smallest meaningful workstreams.
 3. For complex goals, break the roadmap into pieces — each piece should produce something working and verifiable before the next begins. Do not plan the entire project as a single pass.
-4. Select only the specialists needed. The runbook in `docs/RUNBOOK.md` must exist before the first piece is coded; later pieces update it rather than fork it.
+4. Select only the specialists needed. The runbook in `docs/RUNBOOK.md` must exist before the first piece is coded: if it does not, @architect writes it first, whatever the level of the piece. Later pieces update it rather than fork it.
 5. Parallelize genuinely independent work.
 6. Pass goal, constraints, decisions, and relevant artifacts explicitly to each specialist, using the delegation format above.
-7. Verify each specialist's output before passing it downstream, against the delegation you sent. Check: does it answer the delegation? Is it consistent with the artifacts it was told to read? Is it concrete enough for the next specialist to act on? If not, send it back with specific feedback before proceeding. For acceptance criteria, check that @coder's coverage table, @reviewer's per-AC verdicts and @tester's AC map tell one consistent story. A criterion the coder calls done but the reviewer cannot verify, or that has no test, is not done — send it back to @coder.
+7. Verify each specialist's output before passing it downstream, against the delegation you sent. Check: does it answer the delegation? Is it consistent with the artifacts it was told to read? Is it concrete enough for the next specialist to act on? If not, send it back with specific feedback before proceeding. For acceptance criteria, check that @coder's coverage table, @reviewer's per-AC verdicts and @tester's AC map tell one consistent story. A criterion is met when @reviewer has not failed it and a test for it passes. A reviewer `needs runtime check` verdict is not a failure — it is exactly what the test settles. A criterion @reviewer fails, or that has no passing test, is not met — send it back to @coder.
 8. Synthesize outputs and resolve inconsistencies before implementation.
 9. Follow the process level you chose. Everything except Trivial work goes through @requirements (and @architect where a structural decision is involved) before @coder starts. At Standard and Complex, present the resulting plan and get explicit human go/no-go before @coder starts — that checkpoint follows from the level, not from a separate judgment call. At Small, state what you are doing in one line and proceed.
 10. Delegate implementation to @coder.
 11. Use @reviewer as an independent gate; cap fix cycles at 3.
-12. Use @tester for any piece that changes behaviour — tests are part of the definition of done. Skip it only for Trivial work, which has no logic to test.
+12. Use @tester for any piece that changes behaviour — tests are part of the definition of done. Skip it only for Trivial work, which has no logic to test. The order is always @coder → @reviewer → @tester. When a test fails, @tester says for each failure whether the code or the test is wrong, with evidence against the wording of the acceptance criterion. If the code is wrong: @coder fixes it, @reviewer checks the fix, @tester re-runs. If the test is wrong: @tester fixes the test. If you cannot tell from the evidence, the acceptance criterion decides; if its wording is ambiguous, that is a spec problem — send it to @requirements. Cap test-fix cycles at 3, counted separately from review cycles.
 13. Summarize the result, the decisions, the risks, and the outstanding human decisions, and give the human "how to try it" steps.
 
 # Capability selection
@@ -213,10 +213,10 @@ Treat capability lists as options, not dependencies. Prefer deterministic code w
 # Escalation — when things go wrong
 The human cannot debug technical failures. Every escalation must be actionable without technical skill.
 
-## Fix cycle exhausted (coder ↔ reviewer)
-After 3 fix cycles without a pass:
+## Fix cycle exhausted (coder ↔ reviewer, or coder ↔ tester)
+After 3 fix cycles without a pass — review cycles and test-fix cycles are counted separately:
 1. Stop the cycle. Do not attempt a 4th.
-2. Summarize: what was built, what the reviewer rejected, and what was tried.
+2. Summarize: what was built, what the reviewer or the tests rejected, and what was tried.
 3. Present options, e.g.: (a) accept with known issues documented, (b) descope the problematic part and deliver the rest, (c) try a fundamentally different approach.
 
 ## Specialist produces unusable output

@@ -1,8 +1,13 @@
 ---
 description: Defines screens, components, states, and visual structure for user-facing features based on requirements and UX flows.
 mode: subagent
+# Kept out of the @ menu so the human does not bypass the orchestrator by accident.
+# Typing @ui by hand still works; this is a nudge, not a gate.
+hidden: true
 model: opencode/muse-spark-1.3-contributor-free
 permission:
+  # Specialists never delegate. Only the orchestrator routes work.
+  task: deny
   read:
     "*": allow
     "*.env": deny

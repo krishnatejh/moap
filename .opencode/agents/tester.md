@@ -1,8 +1,13 @@
 ---
 description: Writes and runs tests against an implementation. May edit tests and run commands, but cannot edit source implementation.
 mode: subagent
+# Kept out of the @ menu so the human does not bypass the orchestrator by accident.
+# Typing @tester by hand still works; this is a nudge, not a gate.
+hidden: true
 model: opencode/muse-spark-1.3-contributor-free
 permission:
+  # Specialists never delegate. Only the orchestrator routes work.
+  task: deny
   read:
     "*": allow
     "*.env": deny
@@ -64,5 +69,6 @@ Every test states which AC it verifies, using the ID from `docs/specs/` — in t
 
 Report:
 - Tests run, with pass/fail results, and any important failure or regression.
+- For every failing test: whether you believe the code or the test is wrong, with the evidence — quote the acceptance criterion it checks and state what the code actually did. If the criterion's wording allows both readings, say so; do not pick one silently.
 - An AC → test map, so any criterion with no test is visible at a glance.
-- Coverage gaps, and any AC that cannot be tested automatically, with the reason.
+- Coverage gaps, and any AC that cannot be tested automatically, with the reason and a manual check the human could perform instead.

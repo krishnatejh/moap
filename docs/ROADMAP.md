@@ -10,7 +10,7 @@
 
 ## How to read this
 
-Each piece must produce something working and verifiable on its own. A piece counts as **Done** only when every item in the orchestrator's "Definition of done" is satisfied: every `Must` acceptance criterion passed review and its tests, a single documented run command, "how to try it" steps for the human, the context files updated, and a local git commit.
+Each piece must produce something working and verifiable on its own. A piece counts as **Done** only when every item in the orchestrator's "Definition of done" is satisfied: every `Must` acceptance criterion met (not failed by review, and a passing test — or a manual check in your "how to try it" steps where it cannot be tested automatically), a single documented run command, "how to try it" steps for the human, the context files updated, and a local git commit.
 
 Statuses: `Todo` → `In progress` → `In review` → `Done`. If work cannot proceed, use `Blocked` and record what it is waiting for in `docs/PROJECT_STATE.md`. One piece is `In progress` at a time unless the work is genuinely independent and parallel.
 

@@ -1,8 +1,13 @@
 ---
 description: Turns a goal or feature request into a concise spec with scope and testable acceptance criteria.
 mode: subagent
+# Kept out of the @ menu so the human does not bypass the orchestrator by accident.
+# Typing @requirements by hand still works; this is a nudge, not a gate.
+hidden: true
 model: opencode/muse-spark-1.3-contributor-free
 permission:
+  # Specialists never delegate. Only the orchestrator routes work.
+  task: deny
   read:
     "*": allow
     "*.env": deny

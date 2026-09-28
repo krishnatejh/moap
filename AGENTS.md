@@ -48,6 +48,7 @@ See `docs/CAPABILITIES.md`. Treat capabilities as options, not mandatory depende
 - `@coder`: full edit except `.env`; full bash except staging, committing, pushing, history changes, publishing/deploying, and printing `.env`.
 - `@reviewer`: no edits; read-only git and search only, never runs the code.
 - `@tester`: `tests/**` only; bash with the same blocks as `@coder`.
+- All seven specialists: hidden from the `@` menu and unable to delegate (`task: deny`) — only the orchestrator routes work. Hiding is a nudge, not a gate: typing `@coder` by hand still reaches the coder directly and skips every check.
 - Secrets live in untracked `.env`; never commit or paste their contents. `.env.example` lists key names only.
 - **Terminal blocks are a safety net, not a guarantee.** They match command text, so an unusual spelling can slip past them, and an app the coder runs can still load `.env` itself. The rules in each agent's prompt apply regardless of what the permissions happen to catch.
 - **Never run OpenCode with `--auto`.** It approves every `ask` prompt automatically, including the push approval. Hard `deny` rules still hold; prompts do not.
