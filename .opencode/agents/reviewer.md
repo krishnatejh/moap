@@ -4,7 +4,6 @@ mode: subagent
 # Kept out of the @ menu so the human does not bypass the orchestrator by accident.
 # Typing @reviewer by hand still works; this is a nudge, not a gate.
 hidden: true
-model: openrouter/z-ai/glm-5.3
 permission:
   # Specialists never delegate. Only the orchestrator routes work.
   task: deny

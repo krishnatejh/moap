@@ -1,7 +1,6 @@
 ---
 description: Primary agent. Turns the user's goal into an appropriate execution plan, selects the minimum necessary specialists, parallelizes independent work, synthesizes outputs, and delegates implementation/review/test.
 mode: primary
-model: openrouter/z-ai/glm-5.3
 permission:
   # Secrets are never readable by any agent. The OpenCode default for these is
   # "ask", which would put a live key in front of the human — deny instead.
