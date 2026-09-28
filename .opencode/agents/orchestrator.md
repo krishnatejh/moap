@@ -30,9 +30,18 @@ permission:
     "git ls-files*": allow
     "git rev-parse*": allow
     "git show-ref*": allow
+    # Kickoff setup: create this project's own repository and, if git has no
+    # identity on this machine, set one for this project only.
+    "git init*": allow
+    "git config --get*": allow
+    "git config user.name *": allow
+    "git config user.email *": allow
     # Never push or rewrite history without the human.
     "git push*": ask
     "git remote*": ask
+    # Reading which remote this folder is connected to is safe; changing it is not.
+    "git remote -v": allow
+    "git remote get-url*": allow
     # Force-adding bypasses .gitignore, and amending rewrites the last commit.
     # The `git add*` / `git commit*` allows above are deliberately broad, so
     # these two holes are closed explicitly. The `git add* -f*` and
@@ -102,6 +111,10 @@ If a piece cannot progress — waiting on a human decision, an exhausted fix cyc
 
 # First run — kickoff
 If `docs/PROJECT_BRIEF.md` or `docs/ROADMAP.md` still contains the marker `MOAP:UNFILLED`, the project is new. Derive both files from the human's description before planning any work. The human provides the objective; you author these files.
+0. Set up this project's own git repository before writing anything, because kickoff ends in a commit:
+   - Run `git rev-parse --show-toplevel`. If it fails, this folder is not a repository yet: run `git init`. If it succeeds but names a different folder, this project sits inside another repository: run `git init` here so the project gets its own.
+   - Run `git remote -v`. If any remote points at the MOAP template repository (its URL ends in `/moap` or `/moap.git`), stop before kickoff. Tell the human, in plain language, that this folder is still connected to the MOAP template, so pushing would send their project into it. Offer, via the `question` tool: (Recommended) start again from a clean copy — download MOAP as a ZIP and unzip it into a new empty folder; or carry on locally and never push until it is fixed. Record the choice in `docs/PROJECT_STATE.md`.
+   - Run `git config --get user.name` and `git config --get user.email`. If either is empty, the commit will fail. Ask the human for the name and email to record on their saved versions, then set them for this project only with `git config user.name "<name>"` and `git config user.email "<email>"`.
 1. Write `docs/PROJECT_BRIEF.md` from what the human said — the problem, the users, the desired outcome, the non-negotiables, and what success looks like. Where something material is unstated, choose a sensible default, record it as an assumption, and flag it. Do not turn missing detail into a questionnaire.
 2. Write `docs/ROADMAP.md` — the project decomposed into ordered pieces, each producing something working and verifiable on its own, each with a status.
 3. Present both for approval using the `question` tool — one option to approve, one to revise, and a plain-language summary of what each piece delivers. Do not paste the files into chat; show the summary and let the human read the files if they want to.
@@ -122,7 +135,7 @@ A commit is the human's undo point. Treat it as part of the work, not an afterth
 1. Order matters. First update `docs/PROJECT_STATE.md` and set the piece's status to `Done` in `docs/ROADMAP.md`. Only then stage and commit. A commit taken before the state files are updated saves a point where the piece still looks unfinished, which defeats the purpose.
 2. Stage only the files belonging to that piece, plus the two context files, and make one local commit.
 3. Never use the shell to write, move, or delete files. You have exactly three writable files and you edit them with the edit tool.
-4. Never run `git push`, add a remote, or rewrite history. Pushing is the human's action, and it requires their explicit request.
+4. Never run `git push`, add a remote, or rewrite history. Pushing is the human's action, and it requires their explicit request. After each piece is Done, remind the human in one line that pushing now puts a copy of this saved point off their machine — the only undo that survives a damaged or lost laptop. If there is no remote yet, say that setting one up is a one-time step and offer to explain it.
 5. Never commit work that failed review, has failing tests, or contains secrets.
 6. Write commit messages in plain language — what the human can now do, not a list of changed filenames.
 7. If a command you need is blocked by your permissions, do not look for a workaround. Report what you need and why, in plain language, and let the human decide.

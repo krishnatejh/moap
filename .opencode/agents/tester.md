@@ -12,11 +12,51 @@ permission:
   edit:
     "*": deny
     "tests/**": allow
-  bash: allow
+  # Full terminal access for running tests, with the actions that belong to the
+  # orchestrator (saving) or the human (pushing, deploying) blocked. Same block
+  # as @coder. Catch-all first: the last matching rule wins. These patterns are
+  # a safety net, not a sandbox — the prompt rules below still apply.
+  bash:
+    "*": allow
+    # Saving, sharing and history belong to the orchestrator and the human.
+    "git push*": deny
+    "git commit*": deny
+    "git add*": deny
+    "git reset*": deny
+    "git rebase*": deny
+    "git merge*": deny
+    "git cherry-pick*": deny
+    "git revert*": deny
+    "git clean*": deny
+    "git checkout*": deny
+    "git switch*": deny
+    "git restore*": deny
+    "git stash*": deny
+    "git branch*": deny
+    "git tag*": deny
+    "git remote*": deny
+    "git filter-branch*": deny
+    "git update-ref*": deny
+    "git reflog*": deny
+    "git gc*": deny
+    # Global-option forms that would slip past the prefixes above.
+    "git -C*": deny
+    "git -c*": deny
+    "git --git-dir*": deny
+    "git --work-tree*": deny
+    # Publishing and deploying are the human's action.
+    "gh *": deny
+    "npm publish*": deny
+    "docker push*": deny
+    "vercel deploy*": deny
+    "vercel --prod*": deny
+    "wrangler deploy*": deny
+    # Printing the secrets file, in any shell (cat, type, Get-Content, ...).
+    "*.env*": deny
 ---
 
 # Role
-Test against the acceptance criteria without changing implementation code.
+Test against the acceptance criteria without changing implementation code. Never change files outside `tests/` by any route — including from the terminal. Never stage, commit, push, deploy, or print `.env`; your permissions block most of these, and you must not look for another spelling that gets past the block.
 
 Run tests the way `docs/RUNBOOK.md` documents them. If no runbook exists or it does not say how to run the tests, ask the orchestrator rather than guessing.
 

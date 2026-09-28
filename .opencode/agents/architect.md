@@ -9,9 +9,12 @@ permission:
     "*.env.*": deny
     "*.env.example": allow
   # Catch-all first: the last matching rule wins, so specific allows must follow it.
+  # Own folder plus the project runbook — the brief, roadmap and state files
+  # belong to the orchestrator.
   edit:
     "*": deny
-    "docs/**": allow
+    "docs/architecture/**": allow
+    "docs/RUNBOOK.md": allow
   bash:
     "*": deny
     "git log*": allow

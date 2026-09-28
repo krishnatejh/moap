@@ -19,13 +19,21 @@ The template ships with placeholder models. Replace them per-project based on yo
 ## Starting a new project
 
 ### 1. Copy the structure
-Copy the MOAP directory into your new project. You need:
+Start every project from a **clean copy** of MOAP, without MOAP's own git history:
+
+- **Recommended:** on MOAP's GitHub page, choose **Code → Download ZIP**, and unzip it into a new, empty folder for your project. A ZIP never contains git history, so the new project cannot be accidentally connected to the MOAP repository.
+- **If you copy a folder on your own machine instead:** do not copy the hidden `.git` folder. If you do, the project inherits MOAP's history and its connection to the MOAP repository, and the first push would send your project there. The orchestrator checks for this at kickoff and stops if it finds it.
+
+You do not need to set up git yourself. On the first session the orchestrator creates the project's own repository and saves the approved plan as its first version.
+
+The copy needs:
 ```
 .opencode/agents/       ← all 8 agent files
 opencode.json           ← sets the swarm as the default agent
 AGENTS.md               ← operating rules
 .env.example            ← the keys this project needs, without the secrets
 .gitignore              ← keeps .env and build output out of git
+.gitattributes          ← keeps line endings consistent across machines
 docs/CAPABILITIES.md    ← capability inventory
 docs/PROJECT_BRIEF.md   ← vision and non-negotiables
 docs/ROADMAP.md         ← ordered pieces and status
@@ -81,3 +89,7 @@ Three rules for any specialist you add:
 | `build` | An OpenCode built-in, not part of MOAP. Full edit access, no requirements, no review, no approval checkpoint. |
 
 If you ever switch to `build`, you have opted out of every gate MOAP provides. `general` is a built-in subagent with the same problem — the orchestrator is explicitly denied permission to hand work to it.
+
+## Never start OpenCode with `--auto`
+
+`opencode --auto` (or "Enable auto-approve permissions" in the command palette) approves every permission prompt automatically. MOAP uses a prompt in exactly one place — the orchestrator asks you before it pushes to GitHub — and auto mode would silently answer "yes" to it. Hard blocks still hold in auto mode; prompts do not.

@@ -9,9 +9,10 @@ permission:
     "*.env.*": deny
     "*.env.example": allow
   # Catch-all first: the last matching rule wins, so specific allows must follow it.
+  # Own folder only — the brief, roadmap and state files belong to the orchestrator.
   edit:
     "*": deny
-    "docs/**": allow
+    "docs/specs/**": allow
   bash: deny
 ---
 

@@ -42,13 +42,15 @@ See `docs/CAPABILITIES.md`. Treat capabilities as options, not mandatory depende
 ## Permissions
 `.opencode/agents/*.md` frontmatter is the **source of truth** for permissions and model configuration. This section is a summary for orientation only — never edit it expecting behaviour to change.
 
-- Every agent: `read` allows everything except `.env` files. The OpenCode default is `ask`, which would put a live key in front of the human; MOAP denies instead. `.env.example` stays readable.
-- `@orchestrator`: edits only `docs/PROJECT_STATE.md`, `docs/PROJECT_BRIEF.md`, `docs/ROADMAP.md`. Bash limited to read-only git plus `git add`/`git commit`; `git push` asks the human, and history rewrites, force-adding and file deletion are blocked. Delegates only to the specialists below plus the read-only `explore`.
-- `@requirements` / `@architect` / `@ux` / `@ui`: `docs/**` only.
-- `@coder`: full edit + bash.
+- Every agent: the `read` tool allows everything except `.env` files. The OpenCode default is `ask`, which would put a live key in front of the human; MOAP denies instead. `.env.example` stays readable.
+- `@orchestrator`: edits only `docs/PROJECT_STATE.md`, `docs/PROJECT_BRIEF.md`, `docs/ROADMAP.md`. Bash limited to read-only git, `git add`/`git commit`, and kickoff setup (`git init`, reading remotes, setting a project-local git identity); `git push` and changing a remote ask the human, and history rewrites, force-adding and file deletion are blocked. Delegates only to the specialists below plus the read-only `explore`.
+- `@requirements`: `docs/specs/**` only. `@architect`: `docs/architecture/**` and `docs/RUNBOOK.md`. `@ux`: `docs/ux/**`. `@ui`: `docs/ui/**`. None of them can edit the brief, roadmap, state file or capabilities.
+- `@coder`: full edit except `.env`; full bash except staging, committing, pushing, history changes, publishing/deploying, and printing `.env`.
 - `@reviewer`: no edits; read-only git and search only, never runs the code.
-- `@tester`: `tests/**` only + bash.
+- `@tester`: `tests/**` only; bash with the same blocks as `@coder`.
 - Secrets live in untracked `.env`; never commit or paste their contents. `.env.example` lists key names only.
+- **Terminal blocks are a safety net, not a guarantee.** They match command text, so an unusual spelling can slip past them, and an app the coder runs can still load `.env` itself. The rules in each agent's prompt apply regardless of what the permissions happen to catch.
+- **Never run OpenCode with `--auto`.** It approves every `ask` prompt automatically, including the push approval. Hard `deny` rules still hold; prompts do not.
 
 ## Agents outside the swarm
 - `build` is an OpenCode built-in, not a MOAP specialist. It can edit anything and skips requirements, review, and approval. `default_agent` is set to `orchestrator` so sessions open in the swarm; switching to `build` is a deliberate opt-out of every gate.
