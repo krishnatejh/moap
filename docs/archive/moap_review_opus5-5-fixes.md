@@ -317,3 +317,55 @@ The only end-to-end proof left, and it cannot be automated from the terminal wit
    → must name a level before starting, announce it in one line, and apply the
      matching flow.
 ```
+
+---
+
+## Deployment ownership — no new agent
+
+Date: 2026-09-28
+Scope: an open question from the human — should a devops agent oversee deployments, or does that live with the coder?
+Status: decided and implemented. **Committed as `df42b2e`** (4 files, 13 insertions).
+
+### Verdict
+
+No new agent. Deployment splits into pieces that are already owned, and the one piece that isn't is not an agent's job:
+
+| Piece of deployment | Owner |
+|---|---|
+| Deciding where it runs (Vercel, Cloudflare, self-host) | @architect — "deployment/runtime boundaries" was already in its produce list, and `CAPABILITIES.md` carries the platform inventory |
+| Writing the config (Dockerfile, `vercel.json`, workflow YAML, env wiring) | @coder — it is just code; @reviewer checks it like any other code |
+| Documenting how it deploys | the runbook — this was the actual gap |
+| Executing the deployment | **the human** — deliberately, exactly like `git push` |
+
+Three reasons it must stay that way:
+
+1. **The risky half of deployment is execution, not authoring.** A deploy touches live systems with the human's credentials and is the least reversible step in the cycle. An agent with deploy rights either prompts the human to approve commands they cannot evaluate — the failure mode the whole permission redesign just eliminated — or deploys with nobody in the loop. Both are worse than the problem they solve.
+2. **MOAP's own rule forbids adding a specialist** unless a capability recurs that the roster cannot handle ("Do not add agents merely because they are available"). Deploy config is code; writing it is the coder's job.
+3. **Deployment wants to be deterministic, not judged.** "Prefer deterministic code when sufficient" is already a core principle: a single documented deploy command, or a pipeline that deploys on push (GitHub Actions is already in `CAPABILITIES.md`), is identical every time. An LLM agent "overseeing" that adds nondeterminism to the one step that needs zero.
+
+### What was implemented
+
+| File | Fix |
+|---|---|
+| `architect.md` | Runbook item 5: the single deploy command, or the pipeline and which action triggers it (e.g. a push to main). Deploying is the human's action. If the project is not deployed, that is written explicitly rather than left unknown. |
+| `reviewer.md` | Check 7 in "Also check": deployment and infrastructure config, when a piece touches it — secrets in plain files, exposed ports or services, publicly readable storage, unpinned versions, endpoints missing authentication. This is where a workflow YAML with a leaked token or an open bucket is caught. |
+| `AGENTS.md` | Engineering principles: deterministic deployment only — a single documented command in the runbook, or a pipeline triggered by push. No agent deploys on its own initiative. |
+| `README.md` | New "When a project needs a specialist MOAP does not have" section with three rules for per-project additions: narrow scope (one capability, one sentence), deploy execution stays with the human, and never the same agent that writes the code — the coder/reviewer separation applied to ops. |
+
+### The live-ops exception, recorded
+
+The human confirmed some project ideas will involve recurring live operations (migrations against real data, background jobs, multi-environment work). Those projects fork MOAP and add a narrowly scoped specialist — `migrator.md`, not `devops.md`: one sentence of scope, bash limited to the commands it needs with `ask` on anything destructive, and it never writes application code. The README section is the checklist for whoever sets that up, which per the template's own philosophy will likely be the orchestrator at kickoff. The base template stays clean.
+
+### Verification
+
+Both agents re-checked with `opencode debug agent` after the edits; the `deploy` wording is consistent across all four files. No permission or config changes.
+
+### Still open — unchanged, restated
+
+| # | Item | Note |
+|---|---|---|
+| 6 | `-free` models on `@coder` and `@tester` | Accepted as a deliberate human decision: model choice is made per project. Nothing to do. |
+| 18 (remaining half) | Tester's edit scope is `tests/**` only | Deliberately unchanged; only needed if a project wants colocated tests. |
+| — | Live refusal test | Still not run. Prompts are in the previous section. |
+
+After that test passes, MOAP has no open items and is ready to be forked for a real project.
