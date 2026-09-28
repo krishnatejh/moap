@@ -64,6 +64,16 @@ Tell the orchestrator what you want to build and what outcome you expect. Exampl
 
 The orchestrator reads the three context files, writes `PROJECT_BRIEF.md` and `ROADMAP.md` from your description, and asks you to approve them. It then handles the rest — requirements, architecture, implementation, review, testing. You never author the plan.
 
+## When a project needs a specialist MOAP does not have
+
+The base roster covers the full delivery cycle for most projects. Add a specialist **per project** only when a capability recurs that the roster cannot handle — the likely case is live operations: database migrations against real data, background jobs, multi-environment work. Do not add one for deployment alone; deployment is owned by the architect (the runbook's deploy entry), the coder (config files), and you (executing it).
+
+Three rules for any specialist you add:
+
+1. **Narrow scope** — one capability, described in one sentence. "Devops" is not a capability; "runs database migrations after the human approves" is.
+2. **Deploy execution stays with the human.** The new agent may prepare, verify, and document, but a deployment runs only when you act — same model as `git push`.
+3. **Never the same agent that writes the code.** Keep prepare and write on separate agents, for the same reason coder and reviewer are separate.
+
 ## Two agents, two very different things
 | Agent | What it is |
 |---|---|

@@ -82,5 +82,6 @@ These are quality goals, not implementation instructions. Do not prescribe a fra
 - Prefer reliable/official integrations where available.
 - Mock external services in automated tests unless a live integration is explicitly required.
 - Cover important failure modes relevant to the actual workload.
+- Prefer a deterministic deployment: a single documented command in the runbook, or a pipeline triggered by push. No agent deploys on its own initiative — deploying is the human's action, like pushing.
 - Review acceptance criteria, architecture adherence, security/secrets handling, and relevant trust-boundary/injection risks.
 - Keep provider-specific integrations replaceable where practical.

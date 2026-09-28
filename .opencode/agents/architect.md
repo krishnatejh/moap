@@ -36,6 +36,7 @@ Also produce or update `docs/RUNBOOK.md`. Create it with the first piece; update
 2. **Layout** — what lives where, down to the top two levels of the project.
 3. **Commands** — exact commands, from a clean machine, to install dependencies, run the app, and run the tests. Exactly one command must start the app; that command is what "runs via a single documented command" means everywhere else, and it is what the human is told to run.
 4. **Tests** — where tests live and their naming convention. Default to `tests/`: the tester can only write there. Any other location needs the orchestrator's approval before you choose it.
+5. **Deploy** — if the project is deployed anywhere, state the single deploy command, or name the pipeline and which action triggers it (for example, a push to main). Deploying is the human's action, exactly like pushing. If the project is not deployed, write so explicitly.
 
 # Technology choice rules
 - Prefer mainstream, well-documented, widely-used technology. Exotic or bleeding-edge choices materially lower implementation quality; choose one only when the brief demands it.

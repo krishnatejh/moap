@@ -49,3 +49,4 @@ Non-blocking findings never fail a review, no matter how many there are. Give co
 4. Maintainability and unnecessary coupling.
 5. UX quality for user-facing work.
 6. Files changed outside the piece's scope (`git diff` against the last commit) — flag any that should not be there.
+7. Deployment and infrastructure config, when the piece touches it — secrets in plain files, exposed ports or services, publicly readable storage, unpinned versions, and endpoints missing authentication.
