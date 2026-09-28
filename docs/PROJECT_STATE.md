@@ -8,6 +8,10 @@
 
 _No objective set. The orchestrator updates this when the human provides a goal._
 
+## Current Piece and Level
+
+_Which roadmap piece is active and at which process level (Trivial / Small / Standard / Complex) — updated whenever the level is named or changes. A level only ever goes up._
+
 ## Decisions Made
 
 _Chronological log of material decisions. Each entry includes date, decision, and rationale._

@@ -6,7 +6,7 @@ MOAP contains the generic operating model. Individual projects (for example Axia
 
 ## Model strategy
 
-Each agent's model is set in its frontmatter (`.opencode/agents/*.md`). When forking MOAP for a new project, pick one model per tier:
+Each agent's model is set in one place: the `agent` block in `opencode.json`. When forking MOAP for a new project, you edit only that block — the agent files under `.opencode/agents/` set behavior and never need touching for model choice. Pick one model per tier:
 
 | Tier | Roles | What matters | Budget guidance |
 |------|-------|-------------|-----------------|
@@ -14,7 +14,7 @@ Each agent's model is set in its frontmatter (`.opencode/agents/*.md`). When for
 | **Tier 2 — Execution** | `@coder`, `@tester` | Code quality, tool use, large context | Use a strong coding model. The coder writes all the code — don't economize here. |
 | **Tier 3 — Structured** | `@requirements`, `@ux`, `@ui` | Filling well-defined templates | Can use a lighter/cheaper model. Outputs are reviewed before anyone acts on them. |
 
-The template ships with placeholder models. Replace them per-project based on your OpenRouter budget and available models.
+The template ships with working defaults in `opencode.json` — free models where they suffice (`@coder`, `@tester`, `@requirements`, `@ux`, `@ui`) and stronger models where judgment matters (`@orchestrator`, `@architect`, `@reviewer`). For real work, put your strongest available coding model on `@coder` first and your strongest reasoning model on `@orchestrator`: the coder writes all the code, and no prompt structure makes a weak one dependable. Check `opencode models` for the IDs your setup can use.
 
 ## Starting a new project
 
@@ -41,11 +41,11 @@ docs/PROJECT_STATE.md   ← state tracking
 ```
 
 ### 2. Set models
-Open each file in `.opencode/agents/` and set the `model:` field in the frontmatter. Use the tier table above to decide which roles get your strongest model vs. a lighter one.
+Open `opencode.json` and set the `model:` for each agent under `agent`. Use the tier table above to decide which roles get your strongest model vs. a lighter one. That block is the only template file you edit per project — everything else the swarm needs goes in your first message (step 3).
 
 ### 3. Note your constraints in the first session (do not edit template files)
 
-Do not edit `AGENTS.md` or any other template file. Everything the swarm needs before it plans goes in your first message:
+Do not edit `AGENTS.md`, the agent prompts, or any other template file — `opencode.json`'s model block (step 2) is the only per-project edit. Everything the swarm needs before it plans goes in your first message:
 - Hard constraints it cannot infer (budget cap, a platform that must be supported, a deadline)
 - Non-negotiables (e.g. "must work offline", "no paid APIs")
 - Domain rules it wouldn't know (e.g. regulatory requirements, business logic)

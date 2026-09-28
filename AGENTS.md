@@ -26,9 +26,9 @@ A project-specific AGENTS.md may add business context, constraints, domain rules
 ## Execution model
 The orchestrator owns decomposition, specialist selection, delegation, synthesis, and delivery. **Its procedure lives in `.opencode/agents/orchestrator.md` — that file is the single source.** This section states only the invariants every agent must respect.
 
-- Work reaches implementation through @requirements (and @architect where a structural decision is involved) before @coder starts. The orchestrator works at the smallest **process level** that fits — Trivial, Small, Standard, or Complex, defined in `.opencode/agents/orchestrator.md` — and says which one before it starts. The human's go/no-go on the plan is required at Standard and Complex only.
+- Everything except Trivial work reaches implementation through @requirements (and @architect where a structural decision is involved) before @coder starts. The orchestrator works at the smallest **process level** that fits — Trivial, Small, Standard, or Complex, defined in `.opencode/agents/orchestrator.md` — and says which one before it starts. The human's go/no-go on the plan is required at Standard and Complex only.
 - @coder implements against the approved spec and design. It does not review its own work and does not change existing tests.
-- @reviewer is an independent read-only gate. Coder/reviewer fix cycles are capped at 3, after which the orchestrator stops and reports.
+- @reviewer is an independent read-only gate. Review fix cycles and test-fix cycles are capped at 3 each, after which the orchestrator stops and reports.
 - @tester writes and runs tests against the acceptance criteria without touching implementation code.
 - Acceptance criteria carry stable IDs. @coder reports coverage against them, @reviewer returns a verdict per criterion, @tester maps tests to them. The orchestrator reconciles all three before a piece is Done.
 - Nothing a specialist produces is passed downstream without the orchestrator checking that it answers the delegation.
@@ -40,7 +40,7 @@ The orchestrator owns decomposition, specialist selection, delegation, synthesis
 See `docs/CAPABILITIES.md`. Treat capabilities as options, not mandatory dependencies.
 
 ## Permissions
-`.opencode/agents/*.md` frontmatter is the **source of truth** for permissions and model configuration. This section is a summary for orientation only — never edit it expecting behaviour to change.
+`.opencode/agents/*.md` frontmatter is the **source of truth** for permissions; model choice lives in `opencode.json` under `agent`. This section is a summary for orientation only — never edit it expecting behaviour to change.
 
 - Every agent: the `read` tool allows everything except `.env` files. The OpenCode default is `ask`, which would put a live key in front of the human; MOAP denies instead. `.env.example` stays readable.
 - `@orchestrator`: edits only `docs/PROJECT_STATE.md`, `docs/PROJECT_BRIEF.md`, `docs/ROADMAP.md`. Bash limited to read-only git, `git add`/`git commit`, and kickoff setup (`git init`, reading remotes, setting a project-local git identity); `git push` and changing a remote ask the human, and history rewrites, force-adding and file deletion are blocked. Delegates only to the specialists below plus the read-only `explore`.

@@ -369,3 +369,55 @@ Both agents re-checked with `opencode debug agent` after the edits; the `deploy`
 | — | Live refusal test | Still not run. Prompts are in the previous section. |
 
 After that test passes, MOAP has no open items and is ready to be forked for a real project.
+
+---
+
+## Fifth pass — control gaps, process contradictions, tidy-up
+
+Date: 2026-09-28
+Scope: items 1–3 (High), 4–9 (process contradictions), 10–14 (tidy-up) from the 2026-09-28 validation. Plan agreed with the human before starting, including: coder/tester blocks rather than prompts (option A), orchestrator-created repos (option A), models moved to `opencode.json`, one commit per group.
+Status: **committed** — group A as `cd51d11`, group B as `361a884`, group C in the next commit. (Note: the three earlier "Not committed — working tree only" lines above are stale. Groups 1–4 were committed as `df42b2e`, `837cb44`, `afef9a3`, `8dc237e`, `92bdcda`, `fe50429` and `dd62fc0` before this pass began.)
+
+### Group A — control and safety
+
+| # | Item | Fix |
+|---|---|---|
+| 1 | Coder/tester `bash: allow` could push, rewrite history, stage, delete, or print `.env` | Both now deny-all-then-allow in reverse: `"*"`: allow first, then denies for push/commit/add/reset/rebase/merge/cherry-pick/revert/clean/checkout/switch/restore/stash/branch/tag/remote/filter-branch/update-ref/reflog/gc, the `git -C`/`-c`/`--git-dir`/`--work-tree` bypass forms, `gh`, `npm publish`, `docker push`, `vercel deploy`/`--prod`, `wrangler deploy`, and `*.env*`. Coder edit now denies `.env`/`.env.*` with `.env.example` re-allowed. Prompt bodies updated to match. |
+| 2 | Spec agents could edit `docs/**`, including brief/roadmap/state | Narrowed: requirements → `docs/specs/**`, architect → `docs/architecture/**` + `docs/RUNBOOK.md`, ux → `docs/ux/**`, ui → `docs/ui/**`. |
+| 3 | New projects inherit MOAP's git history or have no repo | Orchestrator kickoff step 0: `git init` if needed (allowed), halt if a remote points at the MOAP template, ask for git name/email if unset (project-local config allowed, read-only remote checks allowed, remote changes still ask). README step 1 rewritten around Download ZIP + "don't copy `.git`"; push reminder added after each piece. |
+
+Honesty fixes in the same group: `AGENTS.md` permissions summary rewritten (terminal blocks are "a safety net, not a guarantee"; `--auto` warning added), same warning in `README.md`, `.env.example` wording corrected.
+
+Verification: `opencode debug agent` for all 8 agents + a throwaway pattern harness replicating `Wildcard.match`/`findLast` against the live rules — 90 cases covering pushes, bypass forms, `.env` printing in both shells, safe commands (`status/diff/log`, `npm install/dev/test`, `python -m venv`), per-agent edit scopes, and the orchestrator's new git allows. All passed.
+
+### Group B — process contradictions
+
+| # | Item | Fix |
+|---|---|---|
+| 4 | Trivial work delegated to @coder, which halts on missing artifacts | Delegation is the spec for Trivial work; coder reports change + check instead of an AC table. `reviewer.md` judges Trivial work against the delegation. |
+| 5 | Small first piece never creates the runbook | @architect runs before the first piece is coded whenever `docs/RUNBOOK.md` is missing, regardless of level. |
+| 6 | Reviewer `unverifiable` → coder loop with no exit | Verdicts are pass / fail / **needs runtime check**. A `Must` criterion is met when not failed by review and a test passes; a genuinely untestable criterion becomes a manual human check recorded in state. DoD item 1, orchestrator step 7, and the roadmap's DoD summary rewritten to match. |
+| 7 | Test failures: no loop, no arbiter, no harness owner | Order fixed as coder → reviewer → tester. Tester classifies each failure as code-wrong / test-wrong with evidence against the AC wording (ambiguity goes back to @requirements). Test-fix cycles capped at 3, separate from review cycles; the fix cycle escalation section covers both. Architect names framework + command in runbook item 4; coder sets up harness config in the first piece; tester writes the tests. |
+| 8 | Reviewer scope check (`git diff`) misses new files | Check 6 now runs `git status` plus `git diff HEAD`. |
+| 9 | Subagents reachable via `@`, coder could delegate to `general` | All 7 carry `hidden: true` + `task: deny` (verified in debug output). `AGENTS.md` and README state hiding is a nudge, not a gate. |
+
+### Group C — tidy-up
+
+| # | Item | Fix |
+|---|---|---|
+| 10 | JEV undefined in `CAPABILITIES.md`; no account field | JEV entry replaced with the section-D description; every capability carries "Account available: unknown" and the architect treats `unknown` as unavailable. |
+| 11 | Requirements missing summary, non-functional needs, defaults | Plain-language summary at the top; non-functional needs as ACs where decidable; every open question gets a recommended default + impact note. Small specs may stay short. |
+| 12 | Model choice spread over 8 files; README contradictions | All `model:` lines moved into `opencode.json` under `agent.<name>.model` — verified via `opencode debug agent` that every agent resolves the same model as before. README: "placeholder" claim dropped, "don't economize" contradiction replaced with honest tier guidance, step 2 points at `opencode.json`, step 3 names it the only per-project edit. |
+| 13 | Wording gaps | `PROJECT_STATE.md` gains "Current piece and level"; AGENTS.md first invariant says "everything except Trivial work", fix-cycle cap covers both loops, permissions line now points model choice at `opencode.json`. |
+| 14 | This record | This section; stale-status note in the line above. |
+
+### Still open — unchanged, restated
+
+| # | Item | Note |
+|---|---|---|
+| 6 | `-free` models on `@coder`/`@tester` | Still the human's per-project decision; README now states it honestly. Nothing to do. |
+| 18 (remaining half) | Tester's edit scope is `tests/**` only | Deliberately unchanged; only needed for colocated tests. |
+| — | Live refusal test | Still not run. Extended script provided at handoff (7 checks: the earlier 4, plus coder refused `git push`, @requirements refused a brief edit, kickoff in a fresh folder creating its own repo). |
+| — | `.gitkeep` folders, slash commands | Deliberately not done; stated in the plan, not forgotten. |
+
+After the live test passes, MOAP has no open items and is ready to be forked for a real project.
