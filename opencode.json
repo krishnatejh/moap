@@ -8,10 +8,10 @@
     "orchestrator": { "model": "openrouter/z-ai/glm-5.3" },
     "architect": { "model": "openrouter/z-ai/glm-5.3" },
     "reviewer": { "model": "openrouter/z-ai/glm-5.3" },
-    "requirements": { "model": "opencode/muse-spark-1.3-contributor-free" },
-    "ux": { "model": "opencode/muse-spark-1.3-contributor-free" },
-    "ui": { "model": "opencode/muse-spark-1.3-contributor-free" },
-    "coder": { "model": "opencode/muse-spark-1.3-contributor-free" },
-    "tester": { "model": "opencode/muse-spark-1.3-contributor-free" }
+    "requirements": { "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free" },
+    "ux": { "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free" },
+    "ui": { "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free" },
+    "coder": { "model": "openrouter/z-ai/glm-5.3" },
+    "tester": { "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free" }
   }
 }

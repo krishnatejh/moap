@@ -90,7 +90,7 @@ Three rules for any specialist you add:
 
 If you ever switch to `build`, you have opted out of every gate MOAP provides. `general` is a built-in subagent with the same problem — the orchestrator is explicitly denied permission to hand work to it.
 
-The seven MOAP specialists are hidden from the `@` menu so you do not reach one by accident. Typing `@coder` by hand still works, and it skips the orchestrator and every check — talk to the orchestrator instead.
+The seven specialist agents are hidden from the `@` menu so you do not reach one by accident. Typing `@coder` by hand still works, and it skips the orchestrator and every check — talk to the orchestrator instead. (The eighth agent file is the orchestrator itself, which is deliberately visible: it is the entry point.)
 
 ## Never start OpenCode with `--auto`
 
